@@ -1,0 +1,9 @@
+[
+  {
+    "session_id": "1a16b56e-507e-42df-8b47-84f2c46bd70d",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/1a16b56e-507e-42df-8b47-84f2c46bd70d.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false
+  }
+]
