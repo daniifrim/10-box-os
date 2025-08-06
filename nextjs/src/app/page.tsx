@@ -70,6 +70,9 @@ export default function Home() {
               </span>
               </div>
               <div className="hidden md:flex items-center space-x-8">
+                <Link href="/teacher-dashboard" className="text-gray-600 hover:text-gray-900 font-medium">
+                  Dashboard Demo
+                </Link>
                 <Link href="#features" className="text-gray-600 hover:text-gray-900">
                   Features
                 </Link>

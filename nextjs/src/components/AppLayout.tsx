@@ -9,7 +9,7 @@ import {
     X,
     ChevronDown,
     LogOut,
-    Key, Files, LucideListTodo,
+    Key, Files, LucideListTodo, Database, CheckSquare, Globe, BarChart3,
 } from 'lucide-react';
 import { useGlobal } from "@/lib/context/GlobalContext";
 import { createSPASassClient } from "@/lib/supabase/client";
@@ -46,6 +46,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
     const navigation = [
         { name: 'Homepage', href: '/app', icon: Home },
+        { name: 'Teacher Dashboard', href: '/app/teacher-dashboard', icon: BarChart3 },
+        { name: 'Daily Tasks', href: '/app/daily-tasks', icon: CheckSquare },
+        { name: 'Dream 100 Database', href: '/app/dream100', icon: Database },
+        { name: 'Client Portal Demo', href: '/app/client-portal-demo', icon: Globe },
         { name: 'Example Storage', href: '/app/storage', icon: Files },
         { name: 'Example Table', href: '/app/table', icon: LucideListTodo },
         { name: 'User Settings', href: '/app/user-settings', icon: User },
@@ -63,7 +67,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             )}
 
             {/* Sidebar */}
-            <div className={`fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out z-30 
+            <div className={`fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out z-30 flex flex-col
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
 
                 <div className="h-16 flex items-center justify-between px-4 border-b">
@@ -77,7 +81,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </div>
 
                 {/* Navigation */}
-                <nav className="mt-4 px-2 space-y-1">
+                <nav className="mt-4 px-2 space-y-1 flex-1">
                     {navigation.map((item) => {
                         const isActive = pathname === item.href;
                         return (
@@ -101,34 +105,27 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     })}
                 </nav>
 
-            </div>
-
-            <div className="lg:pl-64">
-                <div className="sticky top-0 z-10 flex items-center justify-between h-16 bg-white shadow-sm px-4">
-                    <button
-                        onClick={toggleSidebar}
-                        className="lg:hidden text-gray-500 hover:text-gray-700"
-                    >
-                        <Menu className="h-6 w-6"/>
-                    </button>
-
-                    <div className="relative ml-auto">
+                {/* User Card at bottom of sidebar */}
+                <div className="px-2 pb-4">
+                    <div className="relative">
                         <button
                             onClick={() => setUserDropdownOpen(!isUserDropdownOpen)}
-                            className="flex items-center space-x-2 text-sm text-gray-700 hover:text-gray-900"
+                            className="flex items-center space-x-3 w-full p-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg border border-gray-200"
                         >
-                            <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center">
+                            <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
                                 <span className="text-primary-700 font-medium">
                                     {user ? getInitials(user.email) : '??'}
                                 </span>
                             </div>
-                            <span>{user?.email || 'Loading...'}</span>
-                            <ChevronDown className="h-4 w-4"/>
+                            <div className="flex-1 text-left truncate">
+                                <p className="font-medium truncate">{user?.email || 'Loading...'}</p>
+                            </div>
+                            <ChevronDown className="h-4 w-4 flex-shrink-0"/>
                         </button>
 
                         {isUserDropdownOpen && (
-                            <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg border">
-                                <div className="p-2 border-b border-gray-100">
+                            <div className="absolute bottom-full left-0 right-0 mb-2 bg-white rounded-md shadow-lg border">
+                                <div className="p-3 border-b border-gray-100">
                                     <p className="text-xs text-gray-500">Signed in as</p>
                                     <p className="text-sm font-medium text-gray-900 truncate">
                                         {user?.email}
@@ -159,6 +156,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                             </div>
                         )}
                     </div>
+                </div>
+
+            </div>
+
+            <div className="lg:pl-64">
+                <div className="sticky top-0 z-10 flex items-center h-16 bg-white shadow-sm px-4">
+                    <button
+                        onClick={toggleSidebar}
+                        className="lg:hidden text-gray-500 hover:text-gray-700"
+                    >
+                        <Menu className="h-6 w-6"/>
+                    </button>
                 </div>
 
                 <main className="p-4">
