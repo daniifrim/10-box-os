@@ -10,6 +10,7 @@ import {
     ChevronDown,
     LogOut,
     Key, Files, LucideListTodo, Database, CheckSquare, Globe, BarChart3,
+    Target, Package, Repeat, ChevronRight,
 } from 'lucide-react';
 import { useGlobal } from "@/lib/context/GlobalContext";
 import { createSPASassClient } from "@/lib/supabase/client";
@@ -17,6 +18,7 @@ import { createSPASassClient } from "@/lib/supabase/client";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setSidebarOpen] = useState(false);
     const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
+    const [collapsedSections, setCollapsedSections] = useState<{[key: string]: boolean}>({});
     const pathname = usePathname();
     const router = useRouter();
 
@@ -42,6 +44,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             : parts[0].slice(0, 2).toUpperCase();
     };
 
+    const toggleSection = (sectionKey: string) => {
+        setCollapsedSections(prev => ({
+            ...prev,
+            [sectionKey]: !prev[sectionKey]
+        }));
+    };
+
     const productName = process.env.NEXT_PUBLIC_PRODUCTNAME;
 
     const navigationSections = [
@@ -55,6 +64,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             title: 'Consultants',
             items: [
                 { name: 'Consultant Dashboard', href: '/consultant-dashboard', icon: BarChart3 },
+                { name: 'Client Acquisition', href: '/app/client-acquisition', icon: Target },
+                { name: 'Client Service', href: '/app/client-service', icon: Package },
+                { name: 'Client Retention', href: '/app/client-retention', icon: Repeat },
                 { name: 'Daily Tasks', href: '/app/daily-tasks', icon: CheckSquare },
                 { name: 'Dream 100 Database', href: '/app/dream100', icon: Database },
                 { name: 'Client Portal Demo', href: '/app/client-portal-demo', icon: Globe },
@@ -67,7 +79,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 { name: 'Example Table', href: '/app/table', icon: LucideListTodo },
                 { name: 'User Settings', href: '/app/user-settings', icon: User },
             ]
-        }
+        },
     ];
 
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
@@ -97,38 +109,66 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
                 {/* Navigation */}
                 <nav className="mt-4 px-2 flex-1">
-                    {navigationSections.map((section, sectionIndex) => (
-                        <div key={sectionIndex} className={sectionIndex > 0 ? 'mt-6' : ''}>
-                            {section.title && (
-                                <h3 className="px-2 mb-2 text-base font-medium text-gray-900">
-                                    {section.title}
-                                </h3>
-                            )}
-                            <div className="space-y-1">
-                                {section.items.map((item) => {
-                                    const isActive = pathname === item.href;
-                                    return (
-                                        <Link
-                                            key={item.name}
-                                            href={item.href}
-                                            className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                                                isActive
-                                                    ? 'bg-primary-50 text-primary-600'
-                                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                                            }`}
-                                        >
-                                            <item.icon
-                                                className={`mr-3 h-5 w-5 ${
-                                                    isActive ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-500'
+                    {navigationSections.map((section, sectionIndex) => {
+                        const sectionKey = 'key' in section ? section.key as string : `section-${sectionIndex}`;
+                        const isCollapsed = collapsedSections[sectionKey];
+                        const isCollapsible = 'collapsible' in section ? section.collapsible as boolean : false;
+                        
+                        return (
+                            <div key={sectionIndex} className={sectionIndex > 0 ? 'mt-6' : ''}>
+                                {section.title && (
+                                    <div 
+                                        className={`px-2 mb-2 flex items-center justify-between ${
+                                            isCollapsible ? 'cursor-pointer hover:bg-gray-50 rounded-md' : ''
+                                        }`}
+                                        onClick={isCollapsible ? () => toggleSection(sectionKey) : undefined}
+                                    >
+                                        <div className="flex items-center">
+                                            {('numberIcon' in section && section.numberIcon) ? (
+                                                <div className="w-6 h-6 mr-2 bg-primary-100 text-primary-700 rounded flex items-center justify-center text-sm font-medium">
+                                                    {section.numberIcon as string}
+                                                </div>
+                                            ) : null}
+                                            <h3 className="text-base font-medium text-gray-900">
+                                                {section.title}
+                                            </h3>
+                                        </div>
+                                        {isCollapsible && (
+                                            <ChevronRight 
+                                                className={`h-4 w-4 text-gray-400 transition-transform duration-200 ${
+                                                    isCollapsed ? '' : 'rotate-90'
                                                 }`}
                                             />
-                                            {item.name}
-                                        </Link>
-                                    );
-                                })}
+                                        )}
+                                    </div>
+                                )}
+                                <div className={`space-y-1 ${isCollapsible && isCollapsed ? 'hidden' : ''}`}>
+                                    {section.items.map((item) => {
+                                        const isActive = pathname === item.href;
+                                        const indentClass = ('numberIcon' in section && section.numberIcon) ? 'ml-8' : '';
+                                        return (
+                                            <Link
+                                                key={item.name}
+                                                href={item.href}
+                                                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${indentClass} ${
+                                                    isActive
+                                                        ? 'bg-primary-50 text-primary-600'
+                                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                                }`}
+                                            >
+                                                <item.icon
+                                                    className={`mr-3 h-5 w-5 ${
+                                                        isActive ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-500'
+                                                    }`}
+                                                />
+                                                {item.name}
+                                            </Link>
+                                        );
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </nav>
 
                 {/* User Card at bottom of sidebar */}

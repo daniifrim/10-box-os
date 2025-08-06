@@ -177,7 +177,7 @@ export default function TaskManagementPage() {
             if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
                 const dummyTasks = [
                     { id: 1, title: 'Review client proposals', description: 'Check all pending proposals from Dream 100 prospects', done: false, created_at: '2024-01-01T00:00:00Z', is_urgent: true, user_id: 'dev-teacher-123' },
-                    { id: 2, title: 'Update 10-Box methodology documentation', description: 'Add new case studies and examples', done: true, created_at: '2024-01-02T00:00:00Z', is_urgent: false, user_id: 'dev-teacher-123' },
+                    { id: 2, title: 'Update 10 Box methodology documentation', description: 'Add new case studies and examples', done: true, created_at: '2024-01-02T00:00:00Z', is_urgent: false, user_id: 'dev-teacher-123' },
                     { id: 3, title: 'Schedule consultant training session', description: 'Monthly training on boxes 2-4 optimization', done: false, created_at: '2024-01-03T00:00:00Z', is_urgent: false, user_id: 'dev-teacher-123' },
                 ];
                 setTasks(dummyTasks as unknown as Task[]);
