@@ -67,7 +67,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 { name: 'Client Acquisition', href: '/app/client-acquisition', icon: Target },
                 { name: 'Client Service', href: '/app/client-service', icon: Package },
                 { name: 'Client Retention', href: '/app/client-retention', icon: Repeat },
-                { name: 'Daily Tasks', href: '/app/daily-tasks', icon: CheckSquare },
                 { name: 'Dream 100 Database', href: '/app/dream100', icon: Database },
                 { name: 'Client Portal Demo', href: '/app/client-portal-demo', icon: Globe },
             ]
@@ -75,6 +74,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {
             title: 'Other',
             items: [
+                { name: 'Daily Tasks', href: '/app/daily-tasks', icon: CheckSquare },
                 { name: 'Example Storage', href: '/app/storage', icon: Files },
                 { name: 'Example Table', href: '/app/table', icon: LucideListTodo },
                 { name: 'User Settings', href: '/app/user-settings', icon: User },

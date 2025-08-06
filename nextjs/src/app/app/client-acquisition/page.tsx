@@ -1,21 +1,28 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { clientAcquisitionData } from '@/lib/mockData/clientAcquisition';
 import { dream100Contacts } from '@/lib/mockData/dream100';
 import { ClientAcquisitionData, IdentifyTask, AvatarSnapshot } from '@/lib/types/clientAcquisition';
 import { Dream100Contact } from '@/lib/mockData/dream100';
-import { Target, UserPlus, MessageCircle, Calendar, Users, TrendingUp, Clock, AlertCircle, Eye, Edit3, ExternalLink, Linkedin, Mail, Youtube, MessageSquare } from 'lucide-react';
+import { Target, UserPlus, MessageCircle, Calendar, Users, TrendingUp, Clock, AlertCircle, Eye, Edit3, ExternalLink, Linkedin, Mail, Youtube, MessageSquare, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ContactDetailModal } from '@/components/ContactDetailModal';
 
 export default function ClientAcquisitionPage() {
-  const [activeSection, setActiveSection] = useState<'identify' | 'invite' | 'converse'>('identify');
+  const [activeSection, setActiveSection] = useState<'identify' | 'invite' | 'converse'>('invite');
   const [data, setData] = useState<ClientAcquisitionData>(clientAcquisitionData);
   const [selectedContact, setSelectedContact] = useState<Dream100Contact | null>(null);
+  const [showConversionAlert, setShowConversionAlert] = useState<Dream100Contact | null>(null);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const [loadingStage, setLoadingStage] = useState(0);
+  const router = useRouter();
 
   // Progress bar component (reused from daily tasks)
   const ProgressBar = ({ percentage, color = 'bg-blue-500' }: { percentage: number; color?: string }) => (
@@ -118,55 +125,69 @@ export default function ClientAcquisitionPage() {
     </Dialog>
   );
 
-  // Status badge component (reused from Dream100 page)
-  const StatusBadge = ({ status }: { status: string }) => {
-    const statusConfig = {
-      'Research': { color: 'bg-gray-100 text-gray-800', icon: '🔍' },
-      'Reached Out': { color: 'bg-orange-100 text-orange-800', icon: '📧' },
-      'In Conversation': { color: 'bg-yellow-100 text-yellow-800', icon: '💬' },
-      '2nd Meeting': { color: 'bg-blue-100 text-blue-800', icon: '🤝' },
-      'Buy': { color: 'bg-green-100 text-green-800', icon: '✅' },
-      "Don't Buy": { color: 'bg-red-100 text-red-800', icon: '❌' },
-      'Postpone': { color: 'bg-purple-100 text-purple-800', icon: '⏸️' },
-      'Referral': { color: 'bg-indigo-100 text-indigo-800', icon: '🔄' },
-      'No Decision': { color: 'bg-gray-100 text-gray-600', icon: '❓' }
-    };
-    
-    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig['No Decision'];
-    
-    return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
-        <span className="mr-1">{config.icon}</span>
-        {status}
-      </span>
-    );
-  };
-
-  // Source icon component (reused from Dream100 page)
-  const SourceIcon = ({ source }: { source: string }) => {
-    const icons = {
-      'LinkedIn': <Linkedin className="h-4 w-4 text-blue-600" />,
-      'Email List': <Mail className="h-4 w-4 text-gray-600" />,
-      'YouTube': <Youtube className="h-4 w-4 text-red-600" />,
-      'Referral': <Users className="h-4 w-4 text-green-600" />
-    };
-    
-    return icons[source as keyof typeof icons] || <MessageSquare className="h-4 w-4 text-gray-400" />;
-  };
-
-  // Format date for display (reused from Dream100 page)
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric' 
-    });
-  };
-
-  // Update contact status (reused from Dream100 page)
+  // Update contact status
   const updateContactStatus = (contactId: string, newStatus: string) => {
     // In a real app, this would update the backend
     console.log(`Updating contact ${contactId} to status: ${newStatus}`);
+    
+    // Find the contact to check for conversion
+    const contact = dream100Contacts.find(c => c.id === contactId);
+    if (contact && newStatus === 'Buy' && contact.latest_decision !== 'Buy') {
+      const updatedContact = {
+        ...contact,
+        latest_decision: newStatus as Dream100Contact['latest_decision'],
+        updated_at: new Date().toISOString()
+      };
+      setShowConversionAlert(updatedContact);
+    }
+  };
+
+  // Handle creating client portal with loading animation
+  const handleCreateClientPortal = () => {
+    setShowConversionAlert(null);
+    setSelectedContact(null); // Close contact detail modal
+    setShowLoadingScreen(true);
+    setLoadingStage(0);
+
+    // Stage 1: preparing client portal
+    setTimeout(() => {
+      setLoadingStage(1);
+    }, 1000);
+
+    // Stage 2: sending client portal to client
+    setTimeout(() => {
+      setLoadingStage(2);
+    }, 2000);
+
+    // Stage 3: opening client portal
+    setTimeout(() => {
+      setLoadingStage(3);
+    }, 3000);
+
+    // Navigate to client portal demo
+    setTimeout(() => {
+      router.push('/app/client-portal-demo');
+    }, 4000);
+  };
+
+  // Loading screen component
+  const LoadingScreen = () => {
+    const loadingTexts = [
+      'Preparing client portal...',
+      'Sending client portal to client...',
+      'Opening client portal...'
+    ];
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+        <div className="bg-white rounded-lg p-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-6"></div>
+          <p className="text-lg font-medium text-gray-900">
+            {loadingTexts[loadingStage] || loadingTexts[0]}
+          </p>
+        </div>
+      </div>
+    );
   };
 
   // Dream 100 Stats Component - Compact 2x2 Grid Layout
@@ -308,14 +329,15 @@ export default function ClientAcquisitionPage() {
           <CardContent>
             <div className="space-y-2">
               {todayContacts.map(contact => (
-                <div key={contact.id} className="flex items-center justify-between p-2 bg-green-50 rounded hover:bg-green-100 transition-colors">
+                <div 
+                  key={contact.id} 
+                  onClick={() => setSelectedContact(contact)}
+                  className="flex items-center justify-between p-2 bg-green-50 rounded hover:bg-green-100 transition-colors cursor-pointer"
+                >
                   <div className="flex-1">
-                    <button 
-                      onClick={() => setSelectedContact(contact)}
-                      className="text-sm font-medium text-gray-900 hover:text-green-700 cursor-pointer text-left"
-                    >
+                    <div className="text-sm font-medium text-gray-900 hover:text-green-700">
                       {contact.name}
-                    </button>
+                    </div>
                     <p className="text-xs text-gray-600">{contact.company}</p>
                   </div>
                   <Badge variant="outline" className="text-xs">
@@ -338,14 +360,15 @@ export default function ClientAcquisitionPage() {
           <CardContent>
             <div className="space-y-2">
               {missedYesterday.map(contact => (
-                <div key={contact.id} className="flex items-center justify-between p-2 bg-yellow-50 rounded hover:bg-yellow-100 transition-colors">
+                <div 
+                  key={contact.id} 
+                  onClick={() => setSelectedContact(contact)}
+                  className="flex items-center justify-between p-2 bg-yellow-50 rounded hover:bg-yellow-100 transition-colors cursor-pointer"
+                >
                   <div className="flex-1">
-                    <button 
-                      onClick={() => setSelectedContact(contact)}
-                      className="text-sm font-medium text-gray-900 hover:text-yellow-700 cursor-pointer text-left"
-                    >
+                    <div className="text-sm font-medium text-gray-900 hover:text-yellow-700">
                       {contact.name}
-                    </button>
+                    </div>
                     <p className="text-xs text-gray-600">{contact.company}</p>
                   </div>
                   <Badge variant="outline" className="text-xs">
@@ -368,14 +391,15 @@ export default function ClientAcquisitionPage() {
           <CardContent>
             <div className="space-y-2">
               {overdue.map(contact => (
-                <div key={contact.id} className="flex items-center justify-between p-2 bg-red-50 rounded hover:bg-red-100 transition-colors">
+                <div 
+                  key={contact.id} 
+                  onClick={() => setSelectedContact(contact)}
+                  className="flex items-center justify-between p-2 bg-red-50 rounded hover:bg-red-100 transition-colors cursor-pointer"
+                >
                   <div className="flex-1">
-                    <button 
-                      onClick={() => setSelectedContact(contact)}
-                      className="text-sm font-medium text-gray-900 hover:text-red-700 cursor-pointer text-left"
-                    >
+                    <div className="text-sm font-medium text-gray-900 hover:text-red-700">
                       {contact.name}
-                    </button>
+                    </div>
                     <p className="text-xs text-gray-600">Due: {contact.next_contact_date}</p>
                   </div>
                   <Badge variant="outline" className="text-xs">
@@ -398,14 +422,15 @@ export default function ClientAcquisitionPage() {
           <CardContent>
             <div className="space-y-2">
               {upcomingWeek.map(contact => (
-                <div key={contact.id} className="flex items-center justify-between p-2 bg-blue-50 rounded hover:bg-blue-100 transition-colors">
+                <div 
+                  key={contact.id} 
+                  onClick={() => setSelectedContact(contact)}
+                  className="flex items-center justify-between p-2 bg-blue-50 rounded hover:bg-blue-100 transition-colors cursor-pointer"
+                >
                   <div className="flex-1">
-                    <button 
-                      onClick={() => setSelectedContact(contact)}
-                      className="text-sm font-medium text-gray-900 hover:text-blue-700 cursor-pointer text-left"
-                    >
+                    <div className="text-sm font-medium text-gray-900 hover:text-blue-700">
                       {contact.name}
-                    </button>
+                    </div>
                     <p className="text-xs text-gray-600">{contact.next_contact_date || 'This week'}</p>
                   </div>
                   <Badge variant="outline" className="text-xs">
@@ -623,110 +648,48 @@ export default function ClientAcquisitionPage() {
         </Card>
       )}
 
-      {/* Contact Detail Modal (reused from Dream100 page) */}
-      <Dialog open={selectedContact !== null} onOpenChange={() => setSelectedContact(null)}>
-        <DialogContent className="max-w-2xl">
-          {selectedContact && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-3">
-                  <SourceIcon source={selectedContact.source} />
-                  {selectedContact.name}
-                  {selectedContact.is_dream_100 && (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-                      💎 Dream 100
-                    </span>
-                  )}
-                </DialogTitle>
-              </DialogHeader>
-              
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Company & Title</label>
-                    <p className="text-gray-900">{selectedContact.company}</p>
-                    <p className="text-sm text-gray-600">{selectedContact.title}</p>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Contact Info</label>
-                    <p className="text-gray-900">{selectedContact.email}</p>
-                    {selectedContact.phone && (
-                      <p className="text-gray-600">{selectedContact.phone}</p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Current Status</label>
-                    <div className="mt-1">
-                      <StatusBadge status={selectedContact.latest_decision} />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Progress Metrics</label>
-                    <div className="mt-2 space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Conversion Probability:</span>
-                        <span className="font-medium">{selectedContact.conversion_probability}%</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span>Interactions:</span>
-                        <span className="font-medium">{selectedContact.interaction_count}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span>Last Contact:</span>
-                        <span className="font-medium">{formatDate(selectedContact.last_interaction)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Quick Status Update</label>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {['Research', 'Reached Out', 'In Conversation', '2nd Meeting'].map((status) => (
-                        <Button
-                          key={status}
-                          size="sm"
-                          variant={selectedContact.latest_decision === status ? "default" : "outline"}
-                          onClick={() => updateContactStatus(selectedContact.id, status)}
-                        >
-                          {status}
-                        </Button>
-                      ))}
-                    </div>
-                    <div className="mt-2 flex gap-2">
-                      <Button
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700"
-                        onClick={() => updateContactStatus(selectedContact.id, 'Buy')}
-                      >
-                        ✅ Buy
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => updateContactStatus(selectedContact.id, "Don't Buy")}
-                      >
-                        ❌ No Buy
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {selectedContact.notes && (
-                <div className="mt-4 pt-4 border-t">
-                  <label className="text-sm font-medium text-gray-500">Notes</label>
-                  <p className="mt-1 text-gray-900">{selectedContact.notes}</p>
-                </div>
-              )}
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* Contact Detail Modal */}
+      <ContactDetailModal
+        contact={selectedContact}
+        isOpen={selectedContact !== null}
+        onOpenChange={(open) => !open && setSelectedContact(null)}
+        onStatusUpdate={updateContactStatus}
+      />
+
+      {/* Conversion Alert */}
+      {showConversionAlert && (
+        <AlertDialog open={true} onOpenChange={() => setShowConversionAlert(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <CheckCircle2 className="h-6 w-6 text-green-500" />
+                Prospect Converted!
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                <strong>{showConversionAlert.name}</strong> from <strong>{showConversionAlert.company}</strong> has been marked as "Buy". 
+                This will automatically:
+                <ul className="mt-2 list-disc list-inside space-y-1">
+                  <li>Create a client portal for {showConversionAlert.name}</li>
+                  <li>Send magic link authentication email</li>
+                  <li>Generate service milestones from template</li>
+                  <li>Move them to the client management system</li>
+                </ul>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setShowConversionAlert(null)}>
+                Close
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleCreateClientPortal}>
+                Create Client Portal
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {/* Loading Screen */}
+      {showLoadingScreen && <LoadingScreen />}
     </div>
   );
 }

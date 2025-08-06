@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   Search, 
   Plus, 
@@ -15,13 +16,16 @@ import {
   Users,
   MessageSquare,
   Eye,
-  ExternalLink
+  ExternalLink,
+  CheckCircle2
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { dream100Contacts, Dream100Contact, pipelineStats, importTemplate } from "@/lib/mockData/dream100";
+import { ContactDetailModal } from "@/components/ContactDetailModal";
 
 export default function Dream100Database() {
   const [contacts, setContacts] = useState<Dream100Contact[]>(dream100Contacts);
@@ -31,6 +35,10 @@ export default function Dream100Database() {
   const [selectedContact, setSelectedContact] = useState<Dream100Contact | null>(null);
   const [isAddContactOpen, setIsAddContactOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
+  const [showConversionAlert, setShowConversionAlert] = useState<Dream100Contact | null>(null);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const [loadingStage, setLoadingStage] = useState(0);
+  const router = useRouter();
   
   // Filter and search contacts
   const filteredContacts = useMemo(() => {
@@ -46,7 +54,7 @@ export default function Dream100Database() {
     });
   }, [contacts, searchTerm, statusFilter, sourceFilter]);
 
-  // Status badge component
+  // Status badge component (for table display)
   const StatusBadge = ({ status }: { status: string }) => {
     const statusConfig = {
       'Research': { color: 'bg-gray-100 text-gray-800', icon: '🔍' },
@@ -70,7 +78,7 @@ export default function Dream100Database() {
     );
   };
 
-  // Source icon component
+  // Source icon component (for table display)
   const SourceIcon = ({ source }: { source: string }) => {
     const icons = {
       'LinkedIn': <Linkedin className="h-4 w-4 text-blue-600" />,
@@ -84,15 +92,23 @@ export default function Dream100Database() {
 
   // Update contact status
   const updateContactStatus = (contactId: string, newStatus: string) => {
-    setContacts(prev => prev.map(contact => 
-      contact.id === contactId 
-        ? { 
-            ...contact, 
-            latest_decision: newStatus as Dream100Contact['latest_decision'],
-            updated_at: new Date().toISOString()
-          }
-        : contact
-    ));
+    setContacts(prev => prev.map(contact => {
+      if (contact.id === contactId) {
+        const updatedContact = {
+          ...contact,
+          latest_decision: newStatus as Dream100Contact['latest_decision'],
+          updated_at: new Date().toISOString()
+        };
+
+        // Show conversion alert if status changed to "Buy"
+        if (newStatus === 'Buy' && contact.latest_decision !== 'Buy') {
+          setShowConversionAlert(updatedContact);
+        }
+
+        return updatedContact;
+      }
+      return contact;
+    }));
   };
 
   // Format date for display
@@ -128,6 +144,54 @@ export default function Dream100Database() {
     a.download = 'dream100_import_template.csv';
     a.click();
     window.URL.revokeObjectURL(url);
+  };
+
+  // Handle creating client portal with loading animation
+  const handleCreateClientPortal = () => {
+    setShowConversionAlert(null);
+    setSelectedContact(null); // Close contact detail modal
+    setShowLoadingScreen(true);
+    setLoadingStage(0);
+
+    // Stage 1: preparing client portal
+    setTimeout(() => {
+      setLoadingStage(1);
+    }, 1000);
+
+    // Stage 2: sending client portal to client
+    setTimeout(() => {
+      setLoadingStage(2);
+    }, 2000);
+
+    // Stage 3: opening client portal
+    setTimeout(() => {
+      setLoadingStage(3);
+    }, 3000);
+
+    // Navigate to client portal demo
+    setTimeout(() => {
+      router.push('/app/client-portal-demo');
+    }, 4000);
+  };
+
+  // Loading screen component
+  const LoadingScreen = () => {
+    const loadingTexts = [
+      'Preparing client portal...',
+      'Sending client portal to client...',
+      'Opening client portal...'
+    ];
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]">
+        <div className="bg-white rounded-lg p-8 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-6"></div>
+          <p className="text-lg font-medium text-gray-900">
+            {loadingTexts[loadingStage] || loadingTexts[0]}
+          </p>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -407,109 +471,47 @@ export default function Dream100Database() {
       </Card>
 
       {/* Contact Detail Modal */}
-      <Dialog open={selectedContact !== null} onOpenChange={() => setSelectedContact(null)}>
-        <DialogContent className="max-w-2xl">
-          {selectedContact && (
-            <>
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-3">
-                  <SourceIcon source={selectedContact.source} />
-                  {selectedContact.name}
-                  {selectedContact.is_dream_100 && (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
-                      💎 Dream 100
-                    </span>
-                  )}
-                </DialogTitle>
-              </DialogHeader>
-              
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Company & Title</label>
-                    <p className="text-gray-900">{selectedContact.company}</p>
-                    <p className="text-sm text-gray-600">{selectedContact.title}</p>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Contact Info</label>
-                    <p className="text-gray-900">{selectedContact.email}</p>
-                    {selectedContact.phone && (
-                      <p className="text-gray-600">{selectedContact.phone}</p>
-                    )}
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Current Status</label>
-                    <div className="mt-1">
-                      <StatusBadge status={selectedContact.latest_decision} />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Progress Metrics</label>
-                    <div className="mt-2 space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>Conversion Probability:</span>
-                        <span className="font-medium">{selectedContact.conversion_probability}%</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span>Interactions:</span>
-                        <span className="font-medium">{selectedContact.interaction_count}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span>Last Contact:</span>
-                        <span className="font-medium">{formatDate(selectedContact.last_interaction)}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="text-sm font-medium text-gray-500">Quick Status Update</label>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {['Research', 'Reached Out', 'In Conversation', '2nd Meeting'].map((status) => (
-                        <Button
-                          key={status}
-                          size="sm"
-                          variant={selectedContact.latest_decision === status ? "default" : "outline"}
-                          onClick={() => updateContactStatus(selectedContact.id, status)}
-                        >
-                          {status}
-                        </Button>
-                      ))}
-                    </div>
-                    <div className="mt-2 flex gap-2">
-                      <Button
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700"
-                        onClick={() => updateContactStatus(selectedContact.id, 'Buy')}
-                      >
-                        ✅ Buy
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => updateContactStatus(selectedContact.id, "Don't Buy")}
-                      >
-                        ❌ No Buy
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {selectedContact.notes && (
-                <div className="mt-4 pt-4 border-t">
-                  <label className="text-sm font-medium text-gray-500">Notes</label>
-                  <p className="mt-1 text-gray-900">{selectedContact.notes}</p>
-                </div>
-              )}
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
+      <ContactDetailModal
+        contact={selectedContact}
+        isOpen={selectedContact !== null}
+        onOpenChange={(open) => !open && setSelectedContact(null)}
+        onStatusUpdate={updateContactStatus}
+      />
+
+      {/* Conversion Alert */}
+      {showConversionAlert && (
+        <AlertDialog open={true} onOpenChange={() => setShowConversionAlert(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <CheckCircle2 className="h-6 w-6 text-green-500" />
+                Prospect Converted!
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                <strong>{showConversionAlert.name}</strong> from <strong>{showConversionAlert.company}</strong> has been marked as "Buy". 
+                This will automatically:
+                <ul className="mt-2 list-disc list-inside space-y-1">
+                  <li>Create a client portal for {showConversionAlert.name}</li>
+                  <li>Send magic link authentication email</li>
+                  <li>Generate service milestones from template</li>
+                  <li>Move them to the client management system</li>
+                </ul>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setShowConversionAlert(null)}>
+                Close
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={handleCreateClientPortal}>
+                Create Client Portal
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+
+      {/* Loading Screen */}
+      {showLoadingScreen && <LoadingScreen />}
     </div>
   );
 }

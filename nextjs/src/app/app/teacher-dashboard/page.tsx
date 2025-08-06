@@ -244,24 +244,6 @@ export default function TeacherDashboard() {
   
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">10</span>
-              </div>
-              <h1 className="text-xl font-semibold">10 Box OS - Alzay's Dashboard</h1>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
-              <span className="text-sm font-medium">Teacher</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Overview Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
