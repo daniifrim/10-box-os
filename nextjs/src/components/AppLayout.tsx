@@ -44,15 +44,30 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
     const productName = process.env.NEXT_PUBLIC_PRODUCTNAME;
 
-    const navigation = [
-        { name: 'Homepage', href: '/app', icon: Home },
-        { name: 'Teacher Dashboard', href: '/app/teacher-dashboard', icon: BarChart3 },
-        { name: 'Daily Tasks', href: '/app/daily-tasks', icon: CheckSquare },
-        { name: 'Dream 100 Database', href: '/app/dream100', icon: Database },
-        { name: 'Client Portal Demo', href: '/app/client-portal-demo', icon: Globe },
-        { name: 'Example Storage', href: '/app/storage', icon: Files },
-        { name: 'Example Table', href: '/app/table', icon: LucideListTodo },
-        { name: 'User Settings', href: '/app/user-settings', icon: User },
+    const navigationSections = [
+        {
+            items: [
+                { name: 'Homepage', href: '/app', icon: Home },
+                { name: 'Alzay\'s Dashboard', href: '/app/teacher-dashboard', icon: BarChart3 },
+            ]
+        },
+        {
+            title: 'Consultants',
+            items: [
+                { name: 'Consultant Dashboard', href: '/consultant-dashboard', icon: BarChart3 },
+                { name: 'Daily Tasks', href: '/app/daily-tasks', icon: CheckSquare },
+                { name: 'Dream 100 Database', href: '/app/dream100', icon: Database },
+                { name: 'Client Portal Demo', href: '/app/client-portal-demo', icon: Globe },
+            ]
+        },
+        {
+            title: 'Other',
+            items: [
+                { name: 'Example Storage', href: '/app/storage', icon: Files },
+                { name: 'Example Table', href: '/app/table', icon: LucideListTodo },
+                { name: 'User Settings', href: '/app/user-settings', icon: User },
+            ]
+        }
     ];
 
     const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
@@ -81,28 +96,39 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </div>
 
                 {/* Navigation */}
-                <nav className="mt-4 px-2 space-y-1 flex-1">
-                    {navigation.map((item) => {
-                        const isActive = pathname === item.href;
-                        return (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                                    isActive
-                                        ? 'bg-primary-50 text-primary-600'
-                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                                }`}
-                            >
-                                <item.icon
-                                    className={`mr-3 h-5 w-5 ${
-                                        isActive ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-500'
-                                    }`}
-                                />
-                                {item.name}
-                            </Link>
-                        );
-                    })}
+                <nav className="mt-4 px-2 flex-1">
+                    {navigationSections.map((section, sectionIndex) => (
+                        <div key={sectionIndex} className={sectionIndex > 0 ? 'mt-6' : ''}>
+                            {section.title && (
+                                <h3 className="px-2 mb-2 text-base font-medium text-gray-900">
+                                    {section.title}
+                                </h3>
+                            )}
+                            <div className="space-y-1">
+                                {section.items.map((item) => {
+                                    const isActive = pathname === item.href;
+                                    return (
+                                        <Link
+                                            key={item.name}
+                                            href={item.href}
+                                            className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                                                isActive
+                                                    ? 'bg-primary-50 text-primary-600'
+                                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                            }`}
+                                        >
+                                            <item.icon
+                                                className={`mr-3 h-5 w-5 ${
+                                                    isActive ? 'text-primary-500' : 'text-gray-400 group-hover:text-gray-500'
+                                                }`}
+                                            />
+                                            {item.name}
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
                 </nav>
 
                 {/* User Card at bottom of sidebar */}

@@ -1,11 +1,14 @@
+import AppLayout from '@/components/AppLayout';
+import { GlobalProvider } from '@/lib/context/GlobalContext';
+
 export default function ConsultantDashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {children}
-    </div>
+    <GlobalProvider>
+      <AppLayout>{children}</AppLayout>
+    </GlobalProvider>
   );
 }

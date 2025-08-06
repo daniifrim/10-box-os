@@ -30,6 +30,11 @@
   - Refreshed package-lock.json and yarn.lock with latest versions
 
 ### Changed
+- **Improved sidebar navigation organization**
+  - Restructured AppLayout component with sectioned navigation (Consultants, Other)
+  - Added Consultant Dashboard to sidebar navigation with proper routing
+  - Updated consultant dashboard layout to use consistent AppLayout and GlobalProvider
+  - Changed section title typography from text-lg to text-base for better visual hierarchy
 - Enhanced AppLayout component with improved navigation and user experience
 - Updated homepage (`page.tsx`) with better prototype access and demo links
 - Improved main layout (`layout.tsx`) with better responsive design
