@@ -5,5 +5,33 @@
     "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
     "hook_event_name": "Notification",
     "message": "Claude is waiting for your input"
+  },
+  {
+    "session_id": "1a16b56e-507e-42df-8b47-84f2c46bd70d",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/1a16b56e-507e-42df-8b47-84f2c46bd70d.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input"
+  },
+  {
+    "session_id": "8632dc16-3a53-4e6e-a94e-867791caf09a",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/8632dc16-3a53-4e6e-a94e-867791caf09a.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input"
+  },
+  {
+    "session_id": "1a16b56e-507e-42df-8b47-84f2c46bd70d",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/1a16b56e-507e-42df-8b47-84f2c46bd70d.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input"
   }
 ]

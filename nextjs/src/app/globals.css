@@ -260,6 +260,44 @@
     --color-accent-900: #78350f;
 }
 
+.theme-warm-orange {
+    /* Primary colors - Warm Orange */
+    --color-primary-50: #fef7f2;
+    --color-primary-100: #fdede3;
+    --color-primary-200: #fbd8c2;
+    --color-primary-300: #f7b896;
+    --color-primary-400: #f18d68;
+    --color-primary-500: #e76d44;
+    --color-primary-600: #D96E4B; /* Main brand color */
+    --color-primary-700: #b85a3a;
+    --color-primary-800: #9a4a31;
+    --color-primary-900: #7e3d2a;
+
+    /* Secondary colors - Neutral Grays */
+    --color-secondary-50: #f8fafc;
+    --color-secondary-100: #f1f5f9;
+    --color-secondary-200: #e2e8f0;
+    --color-secondary-300: #cbd5e1;
+    --color-secondary-400: #94a3b8;
+    --color-secondary-500: #64748b;
+    --color-secondary-600: #475569;
+    --color-secondary-700: #334155;
+    --color-secondary-800: #1e293b;
+    --color-secondary-900: #0f172a;
+
+    /* Accent colors - Complementary Warm Tones */
+    --color-accent-50: #fdf7f0;
+    --color-accent-100: #fbeee1;
+    --color-accent-200: #f6d9c4;
+    --color-accent-300: #efbb9d;
+    --color-accent-400: #e59670;
+    --color-accent-500: #dc7750;
+    --color-accent-600: #c55f3f;
+    --color-accent-700: #a54a35;
+    --color-accent-800: #863c2f;
+    --color-accent-900: #6e312a;
+}
+
 
 @layer components {
     .btn-primary {

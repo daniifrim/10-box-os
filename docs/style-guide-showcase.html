@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10-box OS Design System Showcase</title>
+    <style>
+        /* CSS Variables - Updated Warm Orange Palette */
+        :root {
+            /* Primary Colors (Warm Orange) */
+            --primary-50: #fef7f2;
+            --primary-100: #fdede3;
+            --primary-200: #fbd8c2;
+            --primary-300: #f7b896;
+            --primary-400: #f18d68;
+            --primary-500: #e76d44;
+            --primary-600: #D96E4B; /* Main brand color */
+            --primary-700: #b85a3a;
+            --primary-800: #9a4a31;
+            --primary-900: #7e3d2a;
+            
+            /* Secondary Colors (Neutral Grays) */
+            --secondary-50: #f8fafc;
+            --secondary-100: #f1f5f9;
+            --secondary-200: #e2e8f0;
+            --secondary-300: #cbd5e1;
+            --secondary-400: #94a3b8;
+            --secondary-500: #64748b;
+            --secondary-600: #475569;
+            --secondary-700: #334155;
+            --secondary-800: #1e293b;
+            --secondary-900: #0f172a;
+            
+            /* Semantic Colors */
+            --green-50: #f0fdf4;
+            --green-100: #dcfce7;
+            --green-500: #22c55e;
+            --green-600: #16a34a;
+            --green-700: #15803d;
+            
+            --yellow-50: #fefce8;
+            --yellow-100: #fef3c7;
+            --yellow-500: #eab308;
+            --yellow-600: #ca8a04;
+            --yellow-700: #a16207;
+            
+            --red-50: #fef2f2;
+            --red-100: #fee2e2;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+            --red-700: #b91c1c;
+            
+            --purple-50: #faf5ff;
+            --purple-100: #f3e8ff;
+            --purple-500: #a855f7;
+            --purple-600: #9333ea;
+            --purple-700: #7c3aed;
+            
+            /* Typography */
+            --font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.375rem;
+            --radius-lg: 0.5rem;
+            --radius-xl: 0.75rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--secondary-800);
+            background-color: var(--secondary-50);
+        }
+        
+        /* Layout */
+        .showcase-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            background: white;
+            border-right: 1px solid var(--secondary-200);
+            padding: var(--space-6);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .main-content {
+            padding: var(--space-8);
+            max-width: 1200px;
+        }
+        
+        /* Navigation */
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-500) 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: var(--space-6);
+        }
+        
+        .nav-list {
+            list-style: none;
+        }
+        
+        .nav-item {
+            margin-bottom: var(--space-2);
+        }
+        
+        .nav-link {
+            display: block;
+            padding: var(--space-2) var(--space-3);
+            color: var(--secondary-600);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-50);
+            color: var(--primary-700);
+        }
+        
+        /* Sections */
+        .section {
+            margin-bottom: var(--space-8);
+            scroll-margin-top: var(--space-8);
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+            color: var(--secondary-900);
+        }
+        
+        .section-description {
+            font-size: 1rem;
+            color: var(--secondary-600);
+            margin-bottom: var(--space-6);
+        }
+        
+        .subsection {
+            margin-bottom: var(--space-6);
+        }
+        
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-3);
+            color: var(--secondary-800);
+        }
+        
+        /* Color Palette */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .color-palette {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--secondary-200);
+        }
+        
+        .palette-title {
+            font-weight: 600;
+            margin-bottom: var(--space-3);
+            color: var(--secondary-800);
+        }
+        
+        .color-swatch {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-2);
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            transition: transform 0.2s ease;
+        }
+        
+        .color-swatch:hover {
+            transform: translateX(4px);
+        }
+        
+        .color-sample {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            margin-right: var(--space-3);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .color-info {
+            flex: 1;
+        }
+        
+        .color-name {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .color-value {
+            font-size: 0.75rem;
+            color: var(--secondary-500);
+            font-family: 'Monaco', 'Menlo', monospace;
+        }
+        
+        /* Typography Scale */
+        .typography-samples {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--secondary-200);
+        }
+        
+        .type-sample {
+            margin-bottom: var(--space-4);
+            padding: var(--space-3);
+            border-left: 3px solid var(--primary-200);
+            background: var(--primary-50);
+        }
+        
+        .type-label {
+            font-size: 0.75rem;
+            color: var(--primary-700);
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+        
+        .type-text {
+            margin: 0;
+        }
+        
+        /* Button Components */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-decoration: none;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 40px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-700);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary-200);
+            color: var(--secondary-800);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--secondary-300);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border-color: var(--primary-600);
+            color: var(--primary-600);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .btn-ghost {
+            background: transparent;
+            color: var(--secondary-600);
+        }
+        
+        .btn-ghost:hover {
+            background: var(--secondary-100);
+            color: var(--secondary-800);
+        }
+        
+        .btn-destructive {
+            background: var(--red-600);
+            color: white;
+        }
+        
+        .btn-destructive:hover {
+            background: var(--red-700);
+        }
+        
+        .btn-link {
+            background: transparent;
+            color: #0066cc;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        
+        .btn-link:hover {
+            color: #004499;
+        }
+        
+        /* Form Elements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .form-group {
+            background: white;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--secondary-200);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: var(--space-2);
+            color: var(--secondary-700);
+        }
+        
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: var(--space-2) var(--space-3);
+            border: 1px solid var(--secondary-300);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+        
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(217, 110, 75, 0.1);
+        }
+        
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        .checkbox-group, .radio-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--space-2);
+        }
+        
+        .checkbox-input, .radio-input {
+            margin-right: var(--space-2);
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-600);
+        }
+        
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--secondary-200);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .card-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--secondary-200);
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            color: var(--secondary-900);
+        }
+        
+        .card-description {
+            font-size: 0.875rem;
+            color: var(--secondary-600);
+        }
+        
+        .card-content {
+            padding: var(--space-6);
+        }
+        
+        .card-footer {
+            padding: var(--space-6);
+            background: var(--secondary-50);
+            border-top: 1px solid var(--secondary-200);
+        }
+        
+        /* Status Indicators */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .status-card {
+            background: white;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            border: 1px solid var(--secondary-200);
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--space-1) var(--space-3);
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: var(--space-2);
+        }
+        
+        .status-completed {
+            background: var(--green-50);
+            color: var(--green-700);
+            border: 1px solid var(--green-200);
+        }
+        
+        .status-incomplete {
+            background: var(--yellow-50);
+            color: var(--yellow-700);
+            border: 1px solid var(--yellow-200);
+        }
+        
+        .status-overdue {
+            background: var(--red-50);
+            color: var(--red-700);
+            border: 1px solid var(--red-200);
+        }
+        
+        .role-teacher {
+            background: var(--purple-50);
+            color: var(--purple-700);
+            border: 1px solid var(--purple-200);
+        }
+        
+        .role-consultant {
+            background: var(--primary-50);
+            color: var(--primary-700);
+            border: 1px solid var(--primary-200);
+        }
+        
+        .role-client {
+            background: var(--green-50);
+            color: var(--green-700);
+            border: 1px solid var(--green-200);
+        }
+        
+        /* Business Logic UI */
+        .box-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+        
+        .box-card {
+            background: white;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            border: 2px solid var(--secondary-200);
+            transition: all 0.2s ease;
+        }
+        
+        .box-card:hover {
+            border-color: var(--primary-300);
+            transform: translateY(-2px);
+        }
+        
+        .box-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-600);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-bottom: var(--space-2);
+        }
+        
+        .box-title {
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+            color: var(--secondary-800);
+        }
+        
+        .box-tasks {
+            font-size: 0.75rem;
+            color: var(--secondary-600);
+        }
+        
+        /* Data Tables */
+        .table-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--secondary-200);
+            margin-bottom: var(--space-6);
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .table th {
+            background: var(--secondary-50);
+            padding: var(--space-3) var(--space-4);
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--secondary-700);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--secondary-200);
+        }
+        
+        .table td {
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--secondary-200);
+            font-size: 0.875rem;
+        }
+        
+        .table tbody tr:hover {
+            background: var(--primary-50);
+        }
+        
+        /* Progress Indicators */
+        .progress-container {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--secondary-200);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--secondary-200);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: var(--space-2);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+            transition: width 0.3s ease;
+        }
+        
+        .milestone-list {
+            list-style: none;
+        }
+        
+        .milestone-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: var(--space-4);
+            padding: var(--space-3);
+            border-radius: var(--radius-md);
+            transition: background 0.2s ease;
+        }
+        
+        .milestone-item:hover {
+            background: var(--primary-50);
+        }
+        
+        .milestone-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-right: var(--space-3);
+            flex-shrink: 0;
+        }
+        
+        .milestone-completed {
+            background: var(--green-100);
+            color: var(--green-700);
+        }
+        
+        .milestone-current {
+            background: var(--primary-100);
+            color: var(--primary-700);
+        }
+        
+        .milestone-pending {
+            background: var(--secondary-100);
+            color: var(--secondary-500);
+        }
+        
+        .milestone-content {
+            flex: 1;
+        }
+        
+        .milestone-title {
+            font-weight: 600;
+            margin-bottom: var(--space-1);
+        }
+        
+        .milestone-description {
+            font-size: 0.875rem;
+            color: var(--secondary-600);
+        }
+        
+        /* Interactive Elements */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.2s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--space-4);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+            margin-top: var(--space-6);
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-trigger {
+            background: white;
+            border: 1px solid var(--secondary-300);
+            padding: var(--space-2) var(--space-4);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid var(--secondary-200);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            min-width: 200px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            padding: var(--space-2) var(--space-4);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: var(--primary-50);
+            color: var(--primary-700);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .showcase-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--secondary-200);
+            }
+            
+            .main-content {
+                padding: var(--space-4);
+            }
+            
+            .color-grid, .button-grid, .form-grid, .card-grid, .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .box-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Print Styles */
+        @media print {
+            .sidebar {
+                display: none;
+            }
+            
+            .showcase-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 0;
+            }
+            
+            .card, .form-group, .status-card, .box-card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="showcase-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="nav-title">10-box OS Design System</div>
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#colors" class="nav-link active">Color Palette</a></li>
+                <li class="nav-item"><a href="#typography" class="nav-link">Typography</a></li>
+                <li class="nav-item"><a href="#buttons" class="nav-link">Buttons</a></li>
+                <li class="nav-item"><a href="#forms" class="nav-link">Form Elements</a></li>
+                <li class="nav-item"><a href="#cards" class="nav-link">Cards</a></li>
+                <li class="nav-item"><a href="#status" class="nav-link">Status Indicators</a></li>
+                <li class="nav-item"><a href="#business" class="nav-link">Business Logic UI</a></li>
+                <li class="nav-item"><a href="#data" class="nav-link">Data Display</a></li>
+                <li class="nav-item"><a href="#interactive" class="nav-link">Interactive Elements</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Color Palette Section -->
+            <section id="colors" class="section">
+                <h1 class="section-title">Color Palette</h1>
+                <p class="section-description">
+                    The 10-box OS design system uses a warm orange primary palette with complementary secondary and semantic colors.
+                </p>
+
+                <div class="color-grid">
+                    <!-- Primary Colors -->
+                    <div class="color-palette">
+                        <h3 class="palette-title">Primary (Warm Orange)</h3>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--primary-50);"></div>
+                            <div class="color-info">
+                                <div class="color-name">primary-50</div>
+                                <div class="color-value">#fef7f2</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--primary-100);"></div>
+                            <div class="color-info">
+                                <div class="color-name">primary-100</div>
+                                <div class="color-value">#fdede3</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--primary-200);"></div>
+                            <div class="color-info">
+                                <div class="color-name">primary-200</div>
+                                <div class="color-value">#fbd8c2</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--primary-600); border: 2px solid var(--primary-700);"></div>
+                            <div class="color-info">
+                                <div class="color-name">primary-600 (Main Brand)</div>
+                                <div class="color-value">#D96E4B</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--primary-700);"></div>
+                            <div class="color-info">
+                                <div class="color-name">primary-700</div>
+                                <div class="color-value">#b85a3a</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--primary-800);"></div>
+                            <div class="color-info">
+                                <div class="color-name">primary-800</div>
+                                <div class="color-value">#9a4a31</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Secondary Colors -->
+                    <div class="color-palette">
+                        <h3 class="palette-title">Secondary (Neutrals)</h3>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--secondary-50);"></div>
+                            <div class="color-info">
+                                <div class="color-name">secondary-50</div>
+                                <div class="color-value">#f8fafc</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--secondary-200);"></div>
+                            <div class="color-info">
+                                <div class="color-name">secondary-200</div>
+                                <div class="color-value">#e2e8f0</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--secondary-400);"></div>
+                            <div class="color-info">
+                                <div class="color-name">secondary-400</div>
+                                <div class="color-value">#94a3b8</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--secondary-600);"></div>
+                            <div class="color-info">
+                                <div class="color-name">secondary-600</div>
+                                <div class="color-value">#475569</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--secondary-800);"></div>
+                            <div class="color-info">
+                                <div class="color-name">secondary-800</div>
+                                <div class="color-value">#1e293b</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Semantic Colors -->
+                    <div class="color-palette">
+                        <h3 class="palette-title">Semantic Colors</h3>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--green-500);"></div>
+                            <div class="color-info">
+                                <div class="color-name">Success Green</div>
+                                <div class="color-value">#22c55e</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--yellow-500);"></div>
+                            <div class="color-info">
+                                <div class="color-name">Warning Yellow</div>
+                                <div class="color-value">#eab308</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--red-500);"></div>
+                            <div class="color-info">
+                                <div class="color-name">Error Red</div>
+                                <div class="color-value">#ef4444</div>
+                            </div>
+                        </div>
+                        <div class="color-swatch">
+                            <div class="color-sample" style="background: var(--purple-500);"></div>
+                            <div class="color-info">
+                                <div class="color-name">Teacher Purple</div>
+                                <div class="color-value">#a855f7</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Typography Section -->
+            <section id="typography" class="section">
+                <h2 class="section-title">Typography Scale</h2>
+                <p class="section-description">
+                    System font stack with consistent sizing and spacing for optimal readability across devices.
+                </p>
+
+                <div class="typography-samples">
+                    <div class="type-sample">
+                        <div class="type-label">Hero Text (text-5xl md:text-6xl)</div>
+                        <h1 class="type-text" style="font-size: 3rem; font-weight: 700; line-height: 1.2;">Transform Your Business with the 10-Box Framework</h1>
+                    </div>
+                    
+                    <div class="type-sample">
+                        <div class="type-label">Section Heading (text-3xl)</div>
+                        <h2 class="type-text" style="font-size: 1.875rem; font-weight: 700;">Client Acquisition Dashboard</h2>
+                    </div>
+                    
+                    <div class="type-sample">
+                        <div class="type-label">Card Title (text-2xl)</div>
+                        <h3 class="type-text" style="font-size: 1.5rem; font-weight: 600;">Dream 100 Prospects</h3>
+                    </div>
+                    
+                    <div class="type-sample">
+                        <div class="type-label">Subtitle (text-xl)</div>
+                        <h4 class="type-text" style="font-size: 1.25rem; font-weight: 600;">Daily Task Overview</h4>
+                    </div>
+                    
+                    <div class="type-sample">
+                        <div class="type-label">Large Body (text-lg)</div>
+                        <p class="type-text" style="font-size: 1.125rem;">Welcome to your consultant dashboard. Track your progress through the 10-box framework and monitor your client acquisition pipeline.</p>
+                    </div>
+                    
+                    <div class="type-sample">
+                        <div class="type-label">Default Body (text-base)</div>
+                        <p class="type-text" style="font-size: 1rem;">This is the standard body text size used throughout the application for most content and interface elements.</p>
+                    </div>
+                    
+                    <div class="type-sample">
+                        <div class="type-label">Small Text (text-sm)</div>
+                        <p class="type-text" style="font-size: 0.875rem; color: var(--secondary-600);">Helper text, form labels, and secondary information use this smaller size for improved hierarchy.</p>
+                    </div>
+                    
+                    <div class="type-sample">
+                        <div class="type-label">Extra Small (text-xs)</div>
+                        <p class="type-text" style="font-size: 0.75rem; color: var(--secondary-500);">Metadata, timestamps, and fine print use this minimal size.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Buttons Section -->
+            <section id="buttons" class="section">
+                <h2 class="section-title">Button Components</h2>
+                <p class="section-description">
+                    Interactive buttons with various styles and states, all featuring the warm orange brand color.
+                </p>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Button Variants</h3>
+                    <div class="button-grid">
+                        <button class="btn btn-primary">Primary Button</button>
+                        <button class="btn btn-secondary">Secondary Button</button>
+                        <button class="btn btn-outline">Outline Button</button>
+                        <button class="btn btn-ghost">Ghost Button</button>
+                        <button class="btn btn-destructive">Destructive</button>
+                        <button class="btn btn-link">Link Button</button>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Business Context Examples</h3>
+                    <div class="button-grid">
+                        <button class="btn btn-primary">Add Prospect</button>
+                        <button class="btn btn-outline">Update Task Status</button>
+                        <button class="btn btn-secondary">Export Contacts</button>
+                        <button class="btn btn-ghost">View Details</button>
+                        <button class="btn btn-destructive">Delete Contact</button>
+                        <button class="btn btn-link">View Client Portal</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Form Elements Section -->
+            <section id="forms" class="section">
+                <h2 class="section-title">Form Elements</h2>
+                <p class="section-description">
+                    Form components styled with the warm orange focus states and consistent spacing.
+                </p>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label" for="prospect-name">Prospect Name</label>
+                        <input type="text" id="prospect-name" class="form-input" placeholder="Enter prospect name..." />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="company">Company</label>
+                        <input type="text" id="company" class="form-input" placeholder="Company name..." />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-input" placeholder="prospect@company.com" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="status">Contact Status</label>
+                        <select id="status" class="form-select">
+                            <option>Not Contacted</option>
+                            <option>Initial Contact</option>
+                            <option>Follow-up Scheduled</option>
+                            <option>Meeting Booked</option>
+                            <option>Proposal Sent</option>
+                            <option>Buy Decision</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="notes">Contact Notes</label>
+                        <textarea id="notes" class="form-textarea" placeholder="Add notes about your interaction..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Task Completion</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task1" class="checkbox-input" />
+                            <label for="task1">Avatar refinement completed</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task2" class="checkbox-input" />
+                            <label for="task2">Dream 100 outreach completed</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="task3" class="checkbox-input" />
+                            <label for="task3">Follow-up conversations completed</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cards Section -->
+            <section id="cards" class="section">
+                <h2 class="section-title">Card Components</h2>
+                <p class="section-description">
+                    Flexible card layouts for displaying various types of content and data.
+                </p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Daily Tasks Overview</h3>
+                            <p class="card-description">Track your progress through boxes 2-4 of the framework</p>
+                        </div>
+                        <div class="card-content">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
+                                <span>Box 2 (Identify):</span>
+                                <span style="color: var(--green-600); font-weight: 600;">5/5 Complete</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
+                                <span>Box 3 (Invite):</span>
+                                <span style="color: var(--yellow-600); font-weight: 600;">3/5 Complete</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Box 4 (Converse):</span>
+                                <span style="color: var(--red-600); font-weight: 600;">1/5 Complete</span>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary">Update Tasks</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Dream 100 Progress</h3>
+                            <p class="card-description">Your prospect pipeline overview</p>
+                        </div>
+                        <div class="card-content">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-3);">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-600);">87</div>
+                                    <div style="font-size: 0.875rem; color: var(--secondary-600);">Total Prospects</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--green-600);">12</div>
+                                    <div style="font-size: 0.875rem; color: var(--secondary-600);">Active Conversations</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-600);">3</div>
+                                    <div style="font-size: 0.875rem; color: var(--secondary-600);">New Clients</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-outline">View Pipeline</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Client Portal Access</h3>
+                            <p class="card-description">Manage your client service delivery</p>
+                        </div>
+                        <div class="card-content">
+                            <p>Active client portals with milestone tracking and document delivery.</p>
+                            <div style="margin-top: var(--space-4);">
+                                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span>Acme Corp</span>
+                                    <span class="status-indicator status-completed">Day 30 Complete</span>
+                                </div>
+                                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: var(--space-2);">
+                                    <span>TechStart Inc</span>
+                                    <span class="status-indicator status-incomplete">Day 5 Pending</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-secondary">Manage Portals</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Status Indicators Section -->
+            <section id="status" class="section">
+                <h2 class="section-title">Status Indicators</h2>
+                <p class="section-description">
+                    Visual indicators for task completion status and user roles within the 10-box framework.
+                </p>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Task Completion Status</h3>
+                    <div class="status-grid">
+                        <div class="status-card">
+                            <div class="status-indicator status-completed">🟢 All Tasks Complete</div>
+                            <p style="font-size: 0.875rem; color: var(--secondary-600);">All daily tasks finished on schedule</p>
+                        </div>
+                        
+                        <div class="status-card">
+                            <div class="status-indicator status-incomplete">🟡 Some Incomplete</div>
+                            <p style="font-size: 0.875rem; color: var(--secondary-600);">Missing tasks, but less than 3 days behind</p>
+                        </div>
+                        
+                        <div class="status-card">
+                            <div class="status-indicator status-overdue">🔴 Multiple Overdue</div>
+                            <p style="font-size: 0.875rem; color: var(--secondary-600);">More than 3 days behind schedule</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">User Role Indicators</h3>
+                    <div class="status-grid">
+                        <div class="status-card">
+                            <div class="status-indicator role-teacher">Teacher</div>
+                            <p style="font-size: 0.875rem; color: var(--secondary-600);">Oversees all consultant activities</p>
+                        </div>
+                        
+                        <div class="status-card">
+                            <div class="status-indicator role-consultant">Consultant</div>
+                            <p style="font-size: 0.875rem; color: var(--secondary-600);">Manages Dream 100 and clients</p>
+                        </div>
+                        
+                        <div class="status-card">
+                            <div class="status-indicator role-client">Client</div>
+                            <p style="font-size: 0.875rem; color: var(--secondary-600);">Access to service portal</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Business Logic UI Section -->
+            <section id="business" class="section">
+                <h2 class="section-title">Business Logic UI</h2>
+                <p class="section-description">
+                    Interface elements specific to the 10-box framework and business consulting workflows.
+                </p>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">10-Box Framework (Boxes 2-4)</h3>
+                    <div class="box-grid">
+                        <div class="box-card">
+                            <div class="box-number">2</div>
+                            <div class="box-title">Identify</div>
+                            <div class="box-tasks">5 avatar refinement tasks</div>
+                        </div>
+                        
+                        <div class="box-card">
+                            <div class="box-number">3</div>
+                            <div class="box-title">Invite</div>
+                            <div class="box-tasks">5 Dream 100 outreach tasks</div>
+                        </div>
+                        
+                        <div class="box-card">
+                            <div class="box-number">4</div>
+                            <div class="box-title">Converse</div>
+                            <div class="box-tasks">5 conversation/decision tasks</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Client Milestone Tracking</h3>
+                    <div class="progress-container">
+                        <h4 style="margin-bottom: var(--space-4); font-weight: 600;">Acme Corp - Service Delivery Progress</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                        <p style="font-size: 0.875rem; color: var(--secondary-600); margin-bottom: var(--space-4);">3 of 5 milestones completed</p>
+                        
+                        <ul class="milestone-list">
+                            <li class="milestone-item">
+                                <div class="milestone-number milestone-completed">✓</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-title">Day 1 - Initial Strategy Session</div>
+                                    <div class="milestone-description">Completed initial consultation and strategy mapping</div>
+                                </div>
+                            </li>
+                            
+                            <li class="milestone-item">
+                                <div class="milestone-number milestone-completed">✓</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-title">Day 5 - Market Analysis</div>
+                                    <div class="milestone-description">Market research and competitive analysis delivered</div>
+                                </div>
+                            </li>
+                            
+                            <li class="milestone-item">
+                                <div class="milestone-number milestone-current">3</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-title">Day 15 - Implementation Plan</div>
+                                    <div class="milestone-description">Currently developing detailed implementation roadmap</div>
+                                </div>
+                            </li>
+                            
+                            <li class="milestone-item">
+                                <div class="milestone-number milestone-pending">4</div>
+                                <div class="milestone-content">
+                                    <div class="milestone-title">Day 30 - Final Delivery</div>
+                                    <div class="milestone-description">Complete strategy package and next steps</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Data Display Section -->
+            <section id="data" class="section">
+                <h2 class="section-title">Data Display</h2>
+                <p class="section-description">
+                    Tables, lists, and data visualization components for managing Dream 100 prospects and client information.
+                </p>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Dream 100 Contact List</h3>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Contact</th>
+                                    <th>Company</th>
+                                    <th>Status</th>
+                                    <th>Last Contact</th>
+                                    <th>Next Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">Sarah Johnson</div>
+                                        <div style="font-size: 0.75rem; color: var(--secondary-500);">sarah@acmecorp.com</div>
+                                    </td>
+                                    <td>Acme Corporation</td>
+                                    <td><span class="status-indicator status-completed">Meeting Booked</span></td>
+                                    <td>2024-01-15</td>
+                                    <td>Strategy call scheduled</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">Michael Chen</div>
+                                        <div style="font-size: 0.75rem; color: var(--secondary-500);">m.chen@techstart.io</div>
+                                    </td>
+                                    <td>TechStart Inc</td>
+                                    <td><span class="status-indicator status-incomplete">Follow-up Due</span></td>
+                                    <td>2024-01-10</td>
+                                    <td>Send proposal</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">Lisa Rodriguez</div>
+                                        <div style="font-size: 0.75rem; color: var(--secondary-500);">lisa@growthco.com</div>
+                                    </td>
+                                    <td>Growth Co</td>
+                                    <td><span class="status-indicator status-overdue">No Response</span></td>
+                                    <td>2024-01-05</td>
+                                    <td>Second outreach attempt</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600;">David Park</div>
+                                        <div style="font-size: 0.75rem; color: var(--secondary-500);">david@innovateplus.com</div>
+                                    </td>
+                                    <td>Innovate Plus</td>
+                                    <td><span class="status-indicator status-completed">Proposal Sent</span></td>
+                                    <td>2024-01-12</td>
+                                    <td>Awaiting decision</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Interactive Elements Section -->
+            <section id="interactive" class="section">
+                <h2 class="section-title">Interactive Elements</h2>
+                <p class="section-description">
+                    Modals, dropdowns, and other interactive components with smooth animations and accessibility features.
+                </p>
+
+                <div class="subsection">
+                    <h3 class="subsection-title">Interactive Components</h3>
+                    <div style="display: flex; gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="openModal()">Open Modal Dialog</button>
+                        
+                        <div class="dropdown">
+                            <button class="dropdown-trigger" onclick="toggleDropdown(this)">
+                                Action Menu
+                                <span style="margin-left: auto;">▼</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-item">Add New Prospect</div>
+                                <div class="dropdown-item">Update Task Status</div>
+                                <div class="dropdown-item">Export Data</div>
+                                <div class="dropdown-item">Generate Report</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Overlay -->
+                <div id="modal-overlay" class="modal-overlay">
+                    <div class="modal">
+                        <div class="modal-title">Add New Prospect</div>
+                        <p style="margin-bottom: var(--space-4); color: var(--secondary-600);">
+                            Enter the details for your new Dream 100 prospect. This will be added to your pipeline for tracking.
+                        </p>
+                        <div style="margin-bottom: var(--space-4);">
+                            <label class="form-label" for="modal-name">Prospect Name</label>
+                            <input type="text" id="modal-name" class="form-input" placeholder="Enter name..." />
+                        </div>
+                        <div style="margin-bottom: var(--space-4);">
+                            <label class="form-label" for="modal-company">Company</label>
+                            <input type="text" id="modal-company" class="form-input" placeholder="Company name..." />
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="closeModal()">Add Prospect</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+
+            // Smooth scrolling for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                    
+                    // Update active nav link
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Update active nav link on scroll
+            function updateActiveNavLink() {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (window.pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveNavLink);
+        });
+
+        // Modal functionality
+        function openModal() {
+            const modal = document.getElementById('modal-overlay');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal-overlay');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking overlay
+        document.getElementById('modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Dropdown functionality
+        function toggleDropdown(trigger) {
+            const dropdown = trigger.parentElement;
+            const isActive = dropdown.classList.contains('active');
+            
+            // Close all dropdowns
+            document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+            
+            // Toggle current dropdown
+            if (!isActive) {
+                dropdown.classList.add('active');
+            }
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.dropdown')) {
+                document.querySelectorAll('.dropdown').forEach(d => d.classList.remove('active'));
+            }
+        });
+
+        // Interactive animations for cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card, .box-card, .status-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });
+
+        // Copy color values to clipboard
+        document.addEventListener('DOMContentLoaded', function() {
+            const colorSwatches = document.querySelectorAll('.color-swatch');
+            
+            colorSwatches.forEach(swatch => {
+                swatch.addEventListener('click', function() {
+                    const colorValue = this.querySelector('.color-value').textContent;
+                    navigator.clipboard.writeText(colorValue).then(function() {
+                        // Show temporary feedback
+                        const original = swatch.style.transform;
+                        swatch.style.transform = 'scale(1.05)';
+                        setTimeout(() => {
+                            swatch.style.transform = original;
+                        }, 200);
+                    });
+                });
+                
+                swatch.style.cursor = 'pointer';
+                swatch.title = 'Click to copy color value';
+            });
+        });
+
+        // Progress bar animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressFills = document.querySelectorAll('.progress-fill');
+            
+            const animateProgress = () => {
+                progressFills.forEach(fill => {
+                    const targetWidth = fill.style.width;
+                    fill.style.width = '0%';
+                    
+                    setTimeout(() => {
+                        fill.style.width = targetWidth;
+                    }, 500);
+                });
+            };
+
+            // Trigger animation when progress section comes into view
+            const progressSection = document.querySelector('.progress-container');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateProgress();
+                    }
+                });
+            });
+
+            if (progressSection) {
+                observer.observe(progressSection);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -19,5 +19,117 @@
     "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
     "hook_event_name": "UserPromptSubmit",
     "prompt": "let's publish this codebase to a repo called \"10-box-os\""
+  },
+  {
+    "session_id": "1a16b56e-507e-42df-8b47-84f2c46bd70d",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/1a16b56e-507e-42df-8b47-84f2c46bd70d.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "I need you ask me any clarifying questions about features or anything that you think it's unclear about the product, so we clarify all those aspects first. "
+  },
+  {
+    "session_id": "1a16b56e-507e-42df-8b47-84f2c46bd70d",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/1a16b56e-507e-42df-8b47-84f2c46bd70d.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Ok I've added information on @docs/specs.md, please review and tell me if you need more information. If not you can update everything that's needed on the PRD"
+  },
+  {
+    "session_id": "8632dc16-3a53-4e6e-a94e-867791caf09a",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/8632dc16-3a53-4e6e-a94e-867791caf09a.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "/init "
+  },
+  {
+    "session_id": "1a16b56e-507e-42df-8b47-84f2c46bd70d",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/1a16b56e-507e-42df-8b47-84f2c46bd70d.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "We also need to add a very important feature, which is the CSV import functionality, where the user can download a template, an Excel template, or open, yeah, download an Excel template, where they can load the data, right? Meaning they can put the data on the template so we know it's formatted correctly, and then they can upload the Excel with the CSV functionality, you know? It can upload the Excel or the CSV or the entire Excel even, and the data gets loaded into the Trim 100 database. And actually you have access to the Trim 100 database. On the docs you can see a CSV of the file structure of the Trim 100. @docs/dream100.csv "
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Okay, let's work on the style guide with the style guide agent. Let's use the style guide agent, let's analyze first how the app looks on analyzing the code base, right? After that, and work on the style guide, right? And we can write it in the docs folder. @agent-style-guide "
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "let's continue"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "I've modified the main brand color, can we modify the rest to work according to that? Also, do you think that by it bein red it can cause some problems since red is meant to be related with danger and errors?"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Ok, let's use this one instead and modify the rest accordingly "
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Ok, let's use this one instead and modify the rest accordingly "
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Ok, let's continue developing the interactive html with @agent-style-guide to see how the how the style guide feels"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "ok, dumb question, how do I run @docs/style-guide-showcase.html to see it?"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Let's modify the link button to be classic blue link color"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "How hard will it be to make the html style guide responsibe to all screens. And add a haburguer menu bar in the top rifht for mobile?"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "No, it's ok then, this is meant to be just for reference. Now what we need to do is that we need to modify the actual components that we with this style guide you know? And we need to do that in a safe way to not break the components, is that clear? Please ultrathink"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Ok, go ahead, keep the ultrathink activated"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "cool, let's install the needed dependencies and start testing the UI. I want to test the dashboard directly so i want to bypass the landing page and the login page and every other page that needs a login or is linked to the login should be shown with dummy data if needed., let's ultrathink "
   }
 ]

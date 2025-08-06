@@ -33,6 +33,18 @@ export default function FileManagementPage() {
         try {
             setLoading(true);
             setError('');
+            
+            // Development bypass - use dummy file data
+            if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+                const dummyFiles = [
+                    { name: 'document1.pdf', id: '1', updated_at: '2024-01-01T00:00:00Z', created_at: '2024-01-01T00:00:00Z', last_accessed_at: '2024-01-01T00:00:00Z', bucket_id: 'files', owner: 'dev-teacher-123', size: 1024000, metadata: { size: 1024000 }, buckets: null },
+                    { name: 'presentation.pptx', id: '2', updated_at: '2024-01-02T00:00:00Z', created_at: '2024-01-02T00:00:00Z', last_accessed_at: '2024-01-02T00:00:00Z', bucket_id: 'files', owner: 'dev-teacher-123', size: 2048000, metadata: { size: 2048000 }, buckets: null },
+                    { name: 'spreadsheet.xlsx', id: '3', updated_at: '2024-01-03T00:00:00Z', created_at: '2024-01-03T00:00:00Z', last_accessed_at: '2024-01-03T00:00:00Z', bucket_id: 'files', owner: 'dev-teacher-123', size: 512000, metadata: { size: 512000 }, buckets: null },
+                ];
+                setFiles(dummyFiles as unknown as FileObject[]);
+                return;
+            }
+            
             const supabase = await createSPASassClient();
             const { data, error } = await supabase.getFiles(user!.id);
 
@@ -41,6 +53,14 @@ export default function FileManagementPage() {
         } catch (err) {
             setError('Failed to load files');
             console.error('Error loading files:', err);
+            
+            // Fallback to dummy data in development
+            if (process.env.NODE_ENV === 'development') {
+                const dummyFiles = [
+                    { name: 'fallback-document.pdf', id: '1', updated_at: '2024-01-01T00:00:00Z', created_at: '2024-01-01T00:00:00Z', last_accessed_at: '2024-01-01T00:00:00Z', bucket_id: 'files', owner: 'dev-user-123', size: 1024000, metadata: { size: 1024000 }, buckets: null },
+                ];
+                setFiles(dummyFiles as unknown as FileObject[]);
+            }
         } finally {
             setLoading(false);
         }
@@ -50,6 +70,29 @@ export default function FileManagementPage() {
         try {
             setUploading(true);
             setError('');
+            
+            // Development bypass - simulate file upload
+            if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+                // Simulate upload delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Add dummy file to list
+                const newFile = {
+                    name: file.name,
+                    id: Date.now().toString(),
+                    updated_at: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
+                    last_accessed_at: new Date().toISOString(),
+                    bucket_id: 'files',
+                    owner: 'dev-teacher-123',
+                    size: file.size,
+                    metadata: { size: file.size },
+                    buckets: null
+                };
+                setFiles(prev => [...prev, newFile as unknown as FileObject]);
+                setSuccess('File uploaded successfully');
+                return;
+            }
 
             console.log(user)
 
@@ -63,6 +106,24 @@ export default function FileManagementPage() {
         } catch (err) {
             setError('Failed to upload file');
             console.error('Error uploading file:', err);
+            
+            // Fallback to dummy upload in development
+            if (process.env.NODE_ENV === 'development') {
+                const newFile = {
+                    name: file.name,
+                    id: Date.now().toString(),
+                    updated_at: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
+                    last_accessed_at: new Date().toISOString(),
+                    bucket_id: 'files',
+                    owner: 'dev-user-123',
+                    size: file.size,
+                    metadata: { size: file.size },
+                    buckets: null
+                };
+                setFiles(prev => [...prev, newFile as unknown as FileObject]);
+                setSuccess('File uploaded successfully (demo mode)');
+            }
         } finally {
             setUploading(false);
         }

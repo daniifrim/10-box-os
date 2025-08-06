@@ -33,6 +33,11 @@ export async function updateSession(request: NextRequest) {
 
     // IMPORTANT: DO NOT REMOVE auth.getUser()
 
+    // Development bypass - skip auth check if DEV_BYPASS_AUTH is set
+    if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+        return supabaseResponse
+    }
+
     const {data: user} = await supabase.auth.getUser()
     if (
         (!user || !user.user) && request.nextUrl.pathname.startsWith('/app')

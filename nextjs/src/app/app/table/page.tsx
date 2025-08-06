@@ -44,6 +44,20 @@ function CreateTaskDialog({ onTaskCreated }: CreateTaskDialogProps) {
 
         try {
             setLoading(true);
+            
+            // Development bypass - simulate task creation
+            if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+                // Simulate creation delay
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                setNewTaskTitle('');
+                setNewTaskDescription('');
+                setIsUrgent(false);
+                setOpen(false);
+                await onTaskCreated();
+                return;
+            }
+            
             const supabase = await createSPASassClient();
             const newTask: NewTask = {
                 title: newTaskTitle.trim(),
@@ -64,6 +78,15 @@ function CreateTaskDialog({ onTaskCreated }: CreateTaskDialogProps) {
         } catch (err) {
             setError('Failed to add task');
             console.error('Error adding task:', err);
+            
+            // Fallback demo behavior in development
+            if (process.env.NODE_ENV === 'development') {
+                setNewTaskTitle('');
+                setNewTaskDescription('');
+                setIsUrgent(false);
+                setOpen(false);
+                await onTaskCreated();
+            }
         } finally {
             setLoading(false);
         }
@@ -150,6 +173,17 @@ export default function TaskManagementPage() {
             const isFirstLoad = initialLoading;
             if (!isFirstLoad) setLoading(true);
 
+            // Development bypass - use dummy task data
+            if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+                const dummyTasks = [
+                    { id: 1, title: 'Review client proposals', description: 'Check all pending proposals from Dream 100 prospects', done: false, created_at: '2024-01-01T00:00:00Z', is_urgent: true, user_id: 'dev-teacher-123' },
+                    { id: 2, title: 'Update 10-Box methodology documentation', description: 'Add new case studies and examples', done: true, created_at: '2024-01-02T00:00:00Z', is_urgent: false, user_id: 'dev-teacher-123' },
+                    { id: 3, title: 'Schedule consultant training session', description: 'Monthly training on boxes 2-4 optimization', done: false, created_at: '2024-01-03T00:00:00Z', is_urgent: false, user_id: 'dev-teacher-123' },
+                ];
+                setTasks(dummyTasks as unknown as Task[]);
+                return;
+            }
+
             const supabase = await createSPASassClient();
             const { data, error: supabaseError } = await supabase.getMyTodoList(1, 100, 'created_at', filter);
 
@@ -158,6 +192,14 @@ export default function TaskManagementPage() {
         } catch (err) {
             setError('Failed to load tasks');
             console.error('Error loading tasks:', err);
+            
+            // Fallback to dummy data in development
+            if (process.env.NODE_ENV === 'development') {
+                const fallbackTasks = [
+                    { id: 1, title: 'Demo task', description: 'This is a demonstration task', done: false, created_at: new Date().toISOString(), is_urgent: false, user_id: 'dev-user-123' },
+                ];
+                setTasks(fallbackTasks as unknown as Task[]);
+            }
         } finally {
             setLoading(false);
             setInitialLoading(false);

@@ -5,5 +5,12 @@
     "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
     "hook_event_name": "SubagentStop",
     "stop_hook_active": false
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false
   }
 ]

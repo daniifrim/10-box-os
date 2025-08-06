@@ -19,5 +19,26 @@
     "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
     "hook_event_name": "SessionStart",
     "source": "startup"
+  },
+  {
+    "session_id": "1c7eebed-8748-4735-9e21-8bbda59a7d98",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/1c7eebed-8748-4735-9e21-8bbda59a7d98.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "SessionStart",
+    "source": "clear"
+  },
+  {
+    "session_id": "8632dc16-3a53-4e6e-a94e-867791caf09a",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/8632dc16-3a53-4e6e-a94e-867791caf09a.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "SessionStart",
+    "source": "startup"
+  },
+  {
+    "session_id": "fafb1fb2-b2cc-44f3-8149-41da79e7ecf4",
+    "transcript_path": "/Users/danifrim/.claude/projects/-Users-danifrim-Documents-Coding-10-box-os/fafb1fb2-b2cc-44f3-8149-41da79e7ecf4.jsonl",
+    "cwd": "/Users/danifrim/Documents/Coding/10-box-os",
+    "hook_event_name": "SessionStart",
+    "source": "clear"
   }
 ]

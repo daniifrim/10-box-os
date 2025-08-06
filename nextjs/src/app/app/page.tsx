@@ -29,7 +29,7 @@ export default function DashboardContent() {
         <div className="space-y-6 p-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Welcome, {user?.email?.split('@')[0]}! 👋</CardTitle>
+                    <CardTitle>Welcome, Alzay! 👋</CardTitle>
                     <CardDescription className="flex items-center gap-2">
                         <CalendarDays className="h-4 w-4" />
                         Member for {daysSinceRegistration} days

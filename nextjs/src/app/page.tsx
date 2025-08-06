@@ -3,8 +3,14 @@ import Link from 'next/link';
 import { ArrowRight, Globe, Shield, Users, Key, Database, Clock } from 'lucide-react';
 import AuthAwareButtons from '@/components/AuthAwareButtons';
 import HomePricing from "@/components/HomePricing";
+import { redirect } from 'next/navigation';
 
 export default function Home() {
+  // Development bypass - redirect directly to dashboard
+  if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+    redirect('/app');
+  }
+  
   const productName = process.env.NEXT_PUBLIC_PRODUCTNAME;
 
   const features = [

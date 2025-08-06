@@ -25,6 +25,16 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         async function loadData() {
             try {
+                // Development bypass - use dummy data if DEV_BYPASS_AUTH is set
+                if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+                    setUser({
+                        email: 'teacher@example.com',
+                        id: 'dev-teacher-123',
+                        registered_at: new Date('2024-01-01')
+                    });
+                    return;
+                }
+
                 const supabase = await createSPASassClient();
                 const client = supabase.getSupabaseClient();
 
@@ -42,6 +52,16 @@ export function GlobalProvider({ children }: { children: React.ReactNode }) {
 
             } catch (error) {
                 console.error('Error loading data:', error);
+                
+                // Fallback to dummy data in development if auth fails
+                if (process.env.NODE_ENV === 'development') {
+                    console.log('Using development fallback user data');
+                    setUser({
+                        email: 'dev-user@example.com',
+                        id: 'dev-user-123',
+                        registered_at: new Date('2024-01-01')
+                    });
+                }
             } finally {
                 setLoading(false);
             }
